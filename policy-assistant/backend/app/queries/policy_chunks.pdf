@@ -1,0 +1,14 @@
+create extension if not exists vector;
+
+create table if not exists policy_chunks (
+    id uuid primary key,
+    document_name text not null,
+    page_number int,
+    chunk_text text not null,
+    embeddings vector(1536)
+);
+
+create index if not exists idx_policy_chunks_embedding
+on policy_chunks
+using ivfflat (embeddings vector_cosine_ops)
+with (lists = 100);
